@@ -1,0 +1,73 @@
+.table {
+  position: absolute;
+  top: 0;
+  left: 300px;
+  width: 100%;
+  background-color: #f2f2f2;
+}
+
+.boardTitle {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 97px;
+  padding-left: 20px;
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  color: #000112;
+  background-color: #fff;
+}
+
+.columns {
+  display: flex;
+  justify-content: flex-start;
+  padding: 24px;
+  margin-top: 97px;
+}
+
+.column {
+  width: 280px;
+  margin-right: 24px;
+}
+
+.columnTitle {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 2.4px;
+  color: #828fa3;
+  margin-bottom: 24px;
+}
+
+.task {
+  width: 100%;
+  padding: 23px 16px;
+  background: #ffffff;
+  box-shadow: 0px 4px 6px rgba(54, 78, 126, 0.101545);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 19px;
+  color: #000112;
+}
+
+.count {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+  color: #828fa3;
+}

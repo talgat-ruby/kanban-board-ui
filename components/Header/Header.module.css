@@ -1,0 +1,50 @@
+.header {
+  position: fixed;
+  left: 0;
+  top: 0px;
+  width: 300px;
+  height: 97px;
+  background-color: #fff;
+  z-index: 5;
+}
+
+.logo {
+  display: flex;
+  flex-direction: row;
+  margin-top: 33px;
+  margin-left: 34px;
+  margin-bottom: 54px;
+}
+
+.line1 {
+  width: 6px;
+  height: 25px;
+  margin-right: 3px;
+  background-color: gray;
+  border-radius: 2px;
+  background-color: #635fc7;
+}
+
+.line2 {
+  width: 6px;
+  height: 25px;
+  margin-right: 3px;
+  background-color: gray;
+  border-radius: 2px;
+  background-color: #635fc7;
+  opacity: 0.75;
+}
+
+.line3 {
+  width: 6px;
+  height: 25px;
+  margin-right: 3px;
+  background-color: gray;
+  border-radius: 2px;
+  background-color: #635fc7;
+  opacity: 0.5;
+}
+
+.logoImage {
+  margin-left: 16px;
+}
