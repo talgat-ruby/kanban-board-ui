@@ -1,21 +1,37 @@
-import { IBoard } from "@/types/boards";
+"use client";
+
+import { useState, useEffect } from "react";
 import Aside from "@/components/Aside";
+import NewBoard from "../NewBoard/NewBoard";
+import { getBoards } from "@/app/api/boards/api";
+import { IBoard } from "@/types/boards";
 
-async function Sidebar() {
-  try {
-    const res = await fetch("http://localhost:3000/api/boards");
+function Sidebar() {
+  const [boards, setBoards] = useState<IBoard[]>([]);
 
-    if (!res.ok) {
-      await Promise.reject(res.statusText);
+  useEffect(() => {
+    loadBoards();
+  }, []);
+
+  const loadBoards = async () => {
+    try {
+      const boards = await getBoards();
+      setBoards(boards);
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    const boards: IBoard[] = await res.json();
+  const handleBoardCreated = () => {
+    loadBoards();
+  };
 
-    return <Aside boards={boards} />;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
+  return (
+    <aside>
+      <Aside boards={boards} />
+      <NewBoard onBoardCreated={handleBoardCreated} />
+    </aside>
+  );
 }
 
 export default Sidebar;

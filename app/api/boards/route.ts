@@ -24,6 +24,7 @@ export async function GET(nextRequest: Request) {
       document: query,
       requestHeaders: headers,
     });
+    console.log(data);
 
     return NextResponse.json(data.boards);
   } catch (e) {
