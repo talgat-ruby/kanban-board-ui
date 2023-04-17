@@ -32,7 +32,19 @@ export interface IBoardWithColumnsWithTasksWithSubtasksAggr {
 export interface createBoard {
   id: string;
   name: string;
-  columns: {
-    name: string;
-  };
+  columns: [
+    {
+      name: string;
+    }
+  ];
+}
+
+export interface deleteBoard {
+  id: string;
+  name: string;
+  columns: [
+    {
+      name: string;
+    }
+  ];
 }
