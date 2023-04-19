@@ -4,14 +4,38 @@ import {
   deleteBoard,
 } from "@/types/boards";
 import styles from "./BoardViewer.module.css";
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  MouseEvent,
+  ChangeEvent,
+  FormEvent,
+} from "react";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import deleteIcon from "./delete.svg";
 
 interface IProps {
   id: string;
 }
 
 const BoardViewer = ({ id }: IProps) => {
+  const params = useParams();
+  const router = useRouter();
+  const getId = () => {
+    return Math.floor(Math.random() * 100);
+  };
+
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [addNewTaskModal, setAddNewTaskModal] = useState(false);
+  const [columns, setColumns] = useState([{ name: "", id: 0 }]);
+  const [subTasks, setSubTasks] = useState([
+    { name: "e.g. Make coffee", id: getId() },
+    { name: "e.g. Drink coffee & smile", id: getId() },
+  ]);
   const [board, setBoard] = useState({
     id: "",
     name: "",
@@ -40,7 +64,7 @@ const BoardViewer = ({ id }: IProps) => {
     ],
   });
 
-  const func = async () => {
+  const func = useCallback(async () => {
     if (!id) {
       return null;
     }
@@ -53,43 +77,118 @@ const BoardViewer = ({ id }: IProps) => {
       }
       const board = await res.json();
       setBoard(() => board);
+      setColumns(() => board.columns);
     } catch (err) {
       console.log(err);
       return Promise.reject(err);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     func();
-  }, []);
+  }, [func]);
 
-  // const deleteButtonHandler = async () => {
-  //   try {
-  //     const res = await fetch(`http://localhost:3000/api/deleteBoard/${id}`);
+  const handleDelete = useCallback(async () => {
+    const id = params.id;
 
-  //     if (!res.ok) {
-  //       await Promise.reject(res.statusText);
-  //     }
+    try {
+      const res = await fetch(`http://localhost:3000/api/boards/${id}`, {
+        method: "DELETE",
+      });
+      const json: { id: string; name: string } = await res.json();
 
-  //     const board: deleteBoard = await res.json();
-  //     setModal((prevModal) => !prevModal);
-  //     console.log(board);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+      router.push("/");
+
+      alert(`Board ${json.name} was deleted`);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [router, params.id]);
+
+  const addNewColumnHandler = () => {
+    setColumns((columns) => [...columns, { name: "", id: getId() }]);
+    console.log(columns);
+  };
+
+  const deleteHandler = (event: { currentTarget: any }) => {
+    let id = event.currentTarget.id;
+    console.log(id);
+
+    setColumns((columns) =>
+      columns.filter((elem) => elem.id.toString() !== id)
+    );
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { currentTarget } = event;
+    const { value, dataset } = currentTarget;
+    const ind = dataset.ind;
+    setColumns((columns) =>
+      columns.map((column) => {
+        if (column.id.toString() === ind) {
+          console.log(ind);
+          column.name = value;
+          return column;
+        } else {
+          return column;
+        }
+      })
+    );
+  };
+
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const { currentTarget } = event;
+
+      const formData = new FormData(currentTarget);
+
+      const boardName = formData.get("board-name");
+
+      try {
+        const req = new Request("http://localhost:3000/api/boards", {
+          method: "PATCH",
+          body: JSON.stringify({
+            name: boardName,
+            columnsData: columns.map((column) => ({ name: column.name })),
+          }),
+        });
+        const res = await fetch(req);
+        const json: { id: string } = await res.json();
+
+        router.push(`/${json.id}`);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [columns, router]
+  );
 
   return (
     <>
       <div className={styles.table}>
         <div className={styles.boardTitle}>
-          <h1>{board?.name}</h1>
-          <button className={styles.editButton}>Edit</button>
+          <div className={styles.boardLeft}>
+            <h1>{board?.name}</h1>
+            <button
+              className={styles.editButton}
+              onClick={() => setEditModal((prevEditModal) => !prevEditModal)}
+            >
+              Edit
+            </button>
+            <button
+              className={styles.deleteButton}
+              onClick={() => setModal((prevModal) => !prevModal)}
+            >
+              Delete
+            </button>
+          </div>
+
           <button
-            className={styles.deleteButton}
-            onClick={() => setModal((prevModal) => !prevModal)}
+            className={styles.addNewTaskButton}
+            onClick={() => setAddNewTaskModal((prevModal) => !prevModal)}
           >
-            Delete
+            Add New Task
           </button>
         </div>
 
@@ -124,7 +223,7 @@ const BoardViewer = ({ id }: IProps) => {
             <div className={styles.modalButtons}>
               <button
                 className={styles.modalDeleteButton}
-                // onClick={deleteButtonHandler}
+                onClick={handleDelete}
               >
                 Delete
               </button>
@@ -139,6 +238,136 @@ const BoardViewer = ({ id }: IProps) => {
           <div
             className={styles.overlay}
             onClick={() => setModal((prevModal) => !prevModal)}
+          ></div>
+        </>
+      ) : (
+        <></>
+      )}
+      {editModal ? (
+        <>
+          <form className={styles.editModal} onSubmit={handleSubmit}>
+            <h3>Edit board</h3>
+            <div className={styles.inputBlock}>
+              <label htmlFor="boardName">Board Name</label>
+              <input type="text" id="boardName" />
+            </div>
+            <div className={styles.editColumns}>
+              <label>Board Columns</label>
+              {columns.map((elem, index) => {
+                return (
+                  <div className={styles.editColumn} key={elem.id}>
+                    <input
+                      type="text"
+                      data-ind={elem.id}
+                      value={elem.name}
+                      onChange={handleChange}
+                    />
+                    <button
+                      onClick={deleteHandler}
+                      type="button"
+                      id={elem.id.toString()}
+                    >
+                      <Image
+                        src={deleteIcon}
+                        alt="delete"
+                        width={15}
+                        height={15}
+                      ></Image>
+                    </button>
+                  </div>
+                );
+              })}
+              <button
+                type="button"
+                className={styles.addNewColumnButton}
+                onClick={addNewColumnHandler}
+              >
+                + Add New Column
+              </button>
+              <button className={styles.createNewBoardButton}>
+                Save Changes
+              </button>
+            </div>
+          </form>
+          <div
+            className={styles.overlay}
+            onClick={() => setEditModal((prevEditModal) => !prevEditModal)}
+          ></div>
+        </>
+      ) : (
+        <></>
+      )}
+      {addNewTaskModal ? (
+        <>
+          <form
+            className={styles.addNewTaskModal}
+            // onSubmit={handleTaskSubmit}
+          >
+            <h3>Add New Task</h3>
+            <div className={styles.inputBlock}>
+              <label htmlFor="taskTitle">Title</label>
+              <input
+                type="text"
+                id="TaskTitle"
+                placeholder="e.g. Take coffee break"
+              />
+            </div>
+            <div className={styles.inputBlock}>
+              <label>Description</label>
+              <textarea
+                placeholder="e.g. It’s always good to take a break. This 15 minute break will 
+                recharge the batteries a little."
+              />
+            </div>
+            <div className={styles.modalSubTasks}>
+              <label>Subtasks</label>
+              {subTasks.map((elem, index) => {
+                return (
+                  <div className={styles.modalSubTask} key={elem.id}>
+                    <input
+                      type="text"
+                      data-ind={elem.id}
+                      value={elem.name}
+                      // onChange={handleTaskChange}
+                    />
+                    <button
+                      // onClick={deleteTaskHandler}
+                      id={elem.id.toString()}
+                    >
+                      <Image
+                        src={deleteIcon}
+                        alt="delete"
+                        width={15}
+                        height={15}
+                      ></Image>
+                    </button>
+                  </div>
+                );
+              })}
+
+              <button
+                type="button"
+                className={styles.addNewSubTaskButton}
+                // onClick={addNewSubtaskHandler}
+              >
+                + Add New Subtasks
+              </button>
+              <div className={styles.inputBlock}>
+                <label>Status</label>
+                <select name="status">
+                  <option value="todo">Todo</option>
+                  <option value="doing">Doing</option>
+                  <option value="done">Done</option>
+                </select>
+              </div>
+              <button className={styles.createNewTaskButton}>
+                Create Task
+              </button>
+            </div>
+          </form>
+          <div
+            className={styles.overlay}
+            onClick={() => setAddNewTaskModal((prevModal) => !prevModal)}
           ></div>
         </>
       ) : (

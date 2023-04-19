@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import clsx from "clsx";
 import Link from "next/link";
-import { IBoard, createBoard } from "@/types/boards";
+import { IBoard } from "@/types/boards";
 import styles from "./Aside.module.css";
 
 import shape from "./shape.svg";
 import eye from "./eye-slash.1.svg";
 import deleteIcon from "./delete.svg";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface IProps {
   boards: IBoard[];
@@ -18,26 +19,36 @@ interface IProps {
 function Aside({ boards }: IProps) {
   const [isShowing, setIsShowing] = useState(true);
   const [modal, setModal] = useState(false);
-  const [columns, setColumns] = useState([
-    { name: "Todo", id: 0 },
-    { name: "Doing", id: 1 },
-  ]);
+  const [columns, setColumns] = useState([{ name: "", id: 0 }]);
+  const router = useRouter();
 
-  const createNewBoardHandler = async () => {
-    try {
-      const res = await fetch(`http://localhost:3000/api/createBoard`);
+  const handleSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const { currentTarget } = event;
 
-      if (!res.ok) {
-        await Promise.reject(res.statusText);
+      const formData = new FormData(currentTarget);
+
+      const boardName = formData.get("board-name");
+
+      try {
+        const req = new Request("http://localhost:3000/api/boards", {
+          method: "POST",
+          body: JSON.stringify({
+            name: boardName,
+            columnsData: columns.map((column) => ({ name: column.name })),
+          }),
+        });
+        const res = await fetch(req);
+        const json: { id: string } = await res.json();
+
+        router.push(`/${json.id}`);
+      } catch (e) {
+        console.error(e);
       }
-
-      const board: createBoard = await res.json();
-      setModal((prevModal) => !prevModal);
-      console.log(board);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    },
+    [columns, router]
+  );
 
   const deleteHandler = (event: { currentTarget: any }) => {
     let id = event.currentTarget.id;
@@ -53,7 +64,23 @@ function Aside({ boards }: IProps) {
   };
 
   const addNewColumnHandler = () => {
-    setColumns((columns) => [...columns, { name: "Todo", id: getId() }]);
+    setColumns((columns) => [...columns, { name: "", id: getId() }]);
+  };
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { currentTarget } = event;
+    const { value, dataset } = currentTarget;
+    const ind = Number(dataset.ind);
+    setColumns((columns) =>
+      columns.map((column) => {
+        if (column.id === ind) {
+          column.name = value;
+          return column;
+        } else {
+          return column;
+        }
+      })
+    );
   };
 
   return (
@@ -107,20 +134,29 @@ function Aside({ boards }: IProps) {
       </button>
       {modal ? (
         <>
-          <div className={styles.modal}>
+          <form className={styles.modal} onSubmit={handleSubmit}>
             <h3>Add New Boards</h3>
             <div className={styles.name}>
               <p>Name</p>
-              <input type="text" placeholder="e.g. Web Design" />
+              <input
+                type="text"
+                placeholder="e.g. Web Design"
+                name="board-name"
+              />
             </div>
 
             <div className={styles.modalColumns}>
               <p>Columns</p>
 
-              {columns.map((elem) => {
+              {columns.map((elem, index) => {
                 return (
                   <div className={styles.modalColumn} key={elem.id}>
-                    <input type="text" defaultValue={elem.name} />
+                    <input
+                      type="text"
+                      data-ind={elem.id}
+                      value={elem.name}
+                      onChange={handleChange}
+                    />
                     <button onClick={deleteHandler} id={elem.id.toString()}>
                       <Image
                         src={deleteIcon}
@@ -134,18 +170,16 @@ function Aside({ boards }: IProps) {
               })}
             </div>
             <button
+              type="button"
               className={styles.addNewColumnButton}
               onClick={addNewColumnHandler}
             >
               + Add New Column
             </button>
-            <button
-              className={styles.createNewBoardButton}
-              onClick={createNewBoardHandler}
-            >
+            <button className={styles.createNewBoardButton}>
               + Create New Board
             </button>
-          </div>
+          </form>
           <div
             className={styles.overlay}
             onClick={() => setModal((prevModal) => !prevModal)}
