@@ -9,9 +9,9 @@ interface IProps {
 
 export default function Board({ params }: IProps) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <div>
       <Sidebar />
       <BoardViewer id={params.id} />
-    </main>
+    </div>
   );
 }

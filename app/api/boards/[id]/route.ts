@@ -68,6 +68,22 @@ const updateMutation = gql`
   }
 `;
 
+const deleteColumnsMutation = gql`
+  mutation DeleteColumns($board_id: uuid!) {
+    delete_columns(where: { board_id: { _eq: $board_id } }) {
+      affected_rows
+    }
+  }
+`;
+
+const addColumnsMutation = gql`
+  mutation AddColumns($objects: [columns_insert_input!]!) {
+    insert_columns(objects: $objects) {
+      affected_rows
+    }
+  }
+`;
+
 interface IPatchBody {
   name: string;
 }
