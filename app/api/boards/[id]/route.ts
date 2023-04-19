@@ -13,10 +13,10 @@ const query = gql`
     board: boards_by_pk(id: $id) {
       id
       name
-      columns {
+      columns(order_by: { position: asc }) {
         id
         name
-        tasks {
+        tasks(order_by: { position: asc }) {
           id
           description
           title
