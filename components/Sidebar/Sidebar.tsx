@@ -1,11 +1,7 @@
 import { IBoard } from "@/types/boards";
 import Aside from "@/components/Aside";
 
-interface IProps {
-  boardId?: string;
-}
-
-async function Sidebar({ boardId }: IProps) {
+async function Sidebar() {
   try {
     const res = await fetch("http://localhost:3000/api/boards");
 
@@ -15,7 +11,7 @@ async function Sidebar({ boardId }: IProps) {
 
     const boards: IBoard[] = await res.json();
 
-    return <Aside boardId={boards} boards={boards} />;
+    return <Aside boards={boards} />;
   } catch (e) {
     console.log(e);
     return null;

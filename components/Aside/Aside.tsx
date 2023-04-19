@@ -9,16 +9,16 @@ import {
 } from "react";
 import clsx from "clsx";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { IBoard } from "@/types/boards";
 
 interface IProps {
-  boardId?: string;
   boards: IBoard[];
 }
 
-function Aside({ boardId, boards }: IProps) {
+function Aside({ boards }: IProps) {
   const router = useRouter();
+  const params = useParams();
   const [isShowing, setIsShowing] = useState(true);
   const [columns, setColumns] = useState<string[]>([]);
 
@@ -61,7 +61,7 @@ function Aside({ boardId, boards }: IProps) {
         });
         const json: { id: string; name: string } = await res.json();
 
-        if (boardId === id) {
+        if (params.id === id) {
           router.push("/");
         } else {
           router.refresh();
@@ -72,7 +72,7 @@ function Aside({ boardId, boards }: IProps) {
         console.error(e);
       }
     },
-    [router]
+    [params.id, router]
   );
 
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
