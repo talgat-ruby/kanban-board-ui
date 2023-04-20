@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import deleteIcon from "./delete.svg";
+import dots from "./dots.svg";
 
 interface IProps {
   id: string;
@@ -32,10 +33,9 @@ const BoardViewer = ({ id }: IProps) => {
   const [editModal, setEditModal] = useState(false);
   const [addNewTaskModal, setAddNewTaskModal] = useState(false);
   const [columns, setColumns] = useState([{ name: "", id: 0 }]);
-  const [subTasks, setSubTasks] = useState([
-    { name: "e.g. Make coffee", id: getId() },
-    { name: "e.g. Drink coffee & smile", id: getId() },
-  ]);
+  const [task, setTask] = useState("");
+  const [taskModal, setTaskModal] = useState(false);
+  const [subTasks, setSubTasks] = useState([{ name: "", id: getId() }]);
   const [board, setBoard] = useState({
     id: "",
     name: "",
@@ -164,6 +164,81 @@ const BoardViewer = ({ id }: IProps) => {
     [columns, router]
   );
 
+  const handleSubTaskChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { currentTarget } = event;
+    const { value, dataset } = currentTarget;
+    const ind = Number(dataset.ind);
+    setSubTasks((task) =>
+      task.map((subTask) => {
+        if (subTask.id === ind) {
+          subTask.name = value;
+          return subTask;
+        } else {
+          return subTask;
+        }
+      })
+    );
+  };
+
+  const deleteSubTaskHandler = (event: { currentTarget: any }) => {
+    let id = event.currentTarget.id;
+    console.log(id);
+
+    setSubTasks((subTasks) =>
+      subTasks.filter((subTask) => subTask.id.toString() !== id)
+    );
+  };
+
+  const addNewSubtaskHandler = () => {
+    setSubTasks((subTasks) => [...subTasks, { name: "", id: getId() }]);
+  };
+
+  const handleTaskSubmit = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      const { currentTarget } = event;
+
+      const formData = new FormData(currentTarget);
+      const taskTitle = formData.get("task-title");
+      const taskDescription = formData.get("task-description");
+      const taskStatus = formData.get("status");
+      console.log(taskStatus);
+      console.log(board);
+
+      const column = board.columns.filter(
+        (column) => column.name === taskStatus
+      );
+
+      const columnId = column[0].id;
+
+      try {
+        const req = new Request("http://localhost:3000/api/tasks", {
+          method: "POST",
+          body: JSON.stringify({
+            title: taskTitle,
+            description: taskDescription,
+            columnId: columnId,
+          }),
+        });
+
+        const res = await fetch(req);
+        const json = await res.json();
+        console.log(json);
+        setAddNewTaskModal((prevModal) => !prevModal);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [board]
+  );
+
+  const handleTaskModal = (event: MouseEvent) => {
+    const { currentTarget } = event;
+    console.log(currentTarget.id);
+    setTask(() => currentTarget.id);
+    setTaskModal((prevModal) => !prevModal);
+  };
+
   return (
     <>
       <div className={styles.table}>
@@ -188,7 +263,7 @@ const BoardViewer = ({ id }: IProps) => {
             className={styles.addNewTaskButton}
             onClick={() => setAddNewTaskModal((prevModal) => !prevModal)}
           >
-            Add New Task
+            + Add New Task
           </button>
         </div>
 
@@ -198,7 +273,12 @@ const BoardViewer = ({ id }: IProps) => {
               <h3 className={styles.columnTitle}>{column.name}</h3>
               <ul>
                 {column.tasks.map((task) => (
-                  <li key={task.id} className={styles.task}>
+                  <li
+                    id={task.id}
+                    key={task.id}
+                    className={styles.task}
+                    onClick={handleTaskModal}
+                  >
                     <h4 className={styles.title}>{task.title}</h4>
                     {/* <p className={styles.description}>{task.description}</p> */}
                     <p className={styles.count}>
@@ -299,22 +379,21 @@ const BoardViewer = ({ id }: IProps) => {
       )}
       {addNewTaskModal ? (
         <>
-          <form
-            className={styles.addNewTaskModal}
-            // onSubmit={handleTaskSubmit}
-          >
+          <form className={styles.addNewTaskModal} onSubmit={handleTaskSubmit}>
             <h3>Add New Task</h3>
             <div className={styles.inputBlock}>
               <label htmlFor="taskTitle">Title</label>
               <input
                 type="text"
                 id="TaskTitle"
+                name="task-title"
                 placeholder="e.g. Take coffee break"
               />
             </div>
             <div className={styles.inputBlock}>
               <label>Description</label>
               <textarea
+                name="task-description"
                 placeholder="e.g. It’s always good to take a break. This 15 minute break will 
                 recharge the batteries a little."
               />
@@ -328,10 +407,10 @@ const BoardViewer = ({ id }: IProps) => {
                       type="text"
                       data-ind={elem.id}
                       value={elem.name}
-                      // onChange={handleTaskChange}
+                      onChange={handleSubTaskChange}
                     />
                     <button
-                      // onClick={deleteTaskHandler}
+                      onClick={deleteSubTaskHandler}
                       id={elem.id.toString()}
                     >
                       <Image
@@ -348,16 +427,18 @@ const BoardViewer = ({ id }: IProps) => {
               <button
                 type="button"
                 className={styles.addNewSubTaskButton}
-                // onClick={addNewSubtaskHandler}
+                onClick={addNewSubtaskHandler}
               >
                 + Add New Subtasks
               </button>
               <div className={styles.inputBlock}>
                 <label>Status</label>
                 <select name="status">
-                  <option value="todo">Todo</option>
-                  <option value="doing">Doing</option>
-                  <option value="done">Done</option>
+                  {columns.map((column, index) => (
+                    <option key={index} value={column.name}>
+                      {column.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <button className={styles.createNewTaskButton}>
@@ -368,6 +449,63 @@ const BoardViewer = ({ id }: IProps) => {
           <div
             className={styles.overlay}
             onClick={() => setAddNewTaskModal((prevModal) => !prevModal)}
+          ></div>
+        </>
+      ) : (
+        <></>
+      )}
+      {taskModal ? (
+        <>
+          <div className={styles.taskModal}>
+            <div className={styles.taskModalHeader}>
+              <div className={styles.taskModalTitle}>
+                Research pricing points of various competitors and trial
+                different business models
+              </div>
+              <Image src={dots} alt="dots" width={5} height={20}></Image>
+            </div>
+            <div className={styles.taskModalDescription}>
+              We know what we`re planning to build for version one. Now we need
+              to finalise the first pricing model we`ll use. Keep iterating the
+              subtasks until we have a coherent proposition.
+            </div>
+            <div className={styles.taskModalCount}>
+              <p>Subtasks (2 of 3)</p>
+              <div>
+                <input type="checkbox" id="1" name="1" />
+                <label htmlFor="1">
+                  Research competitor pricing and business models
+                </label>
+              </div>
+
+              <div>
+                <input type="checkbox" id="2" name="2" />
+                <label htmlFor="2">
+                  Outline a business model that works for our solution
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="3" name="3" />
+                <label htmlFor="3">
+                  Talk to potential customers about our proposed solution and
+                  ask for fair price expectancy
+                </label>
+              </div>
+            </div>
+            <div className={styles.inputBlock}>
+              <label>Status</label>
+              <select name="status">
+                {columns.map((column, index) => (
+                  <option key={index} value={column.name}>
+                    {column.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div
+            className={styles.overlay}
+            onClick={() => setTaskModal((prevModal) => !prevModal)}
           ></div>
         </>
       ) : (

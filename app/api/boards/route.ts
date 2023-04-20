@@ -73,6 +73,7 @@ export async function POST(nextRequest: Request) {
 
     return NextResponse.json(data.insert);
   } catch (e) {
+    console.log(e);
     return new Response((e as Error).message, { status: 400 });
   }
 }

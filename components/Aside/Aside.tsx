@@ -32,6 +32,7 @@ function Aside({ boards }: IProps) {
       const boardName = formData.get("board-name");
 
       try {
+        console.log(columns);
         const req = new Request("http://localhost:3000/api/boards", {
           method: "POST",
           body: JSON.stringify({
@@ -39,6 +40,7 @@ function Aside({ boards }: IProps) {
             columnsData: columns.map((column) => ({ name: column.name })),
           }),
         });
+        console.log(columns.map((column) => ({ name: column.name })));
         const res = await fetch(req);
         const json: { id: string } = await res.json();
 
@@ -86,7 +88,7 @@ function Aside({ boards }: IProps) {
   return (
     <>
       <aside className={`${styles.aside} ${clsx(!isShowing && "invisible")}`}>
-        <div className={styles.allBoards}>ALL BOARDS (3)</div>
+        <div className={styles.allBoards}>ALL BOARDS ({boards.length})</div>
         <ul>
           {boards.map((board) => (
             <li className={styles.board} key={board.id}>
