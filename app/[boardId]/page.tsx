@@ -3,7 +3,7 @@ import BoardViewer from "@/components/BoardViewer";
 
 interface IProps {
   params: {
-    id: string;
+    boardId: string;
   };
 }
 
@@ -11,7 +11,7 @@ export default function Board({ params }: IProps) {
   return (
     <div>
       <Sidebar />
-      <BoardViewer id={params.id} />
+      <BoardViewer id={params.boardId} />
     </div>
   );
 }

@@ -5,6 +5,12 @@ interface IProps {
 }
 
 async function BoardViewer({ id }: IProps) {
+  return (
+    <main className="flex-auto mt-[var(--header-height)] bg-light-2 dark:bg-dark-2">
+      Main
+    </main>
+  );
+
   if (!id) {
     return null;
   }

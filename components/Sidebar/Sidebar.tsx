@@ -2,6 +2,8 @@ import { IBoard } from "@/types/boards";
 import Aside from "@/components/Aside";
 
 async function Sidebar() {
+  return <Aside boards={[]} />;
+
   try {
     const res = await fetch("http://localhost:3000/api/boards");
 
