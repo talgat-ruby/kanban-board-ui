@@ -2,6 +2,8 @@
 
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import styles from "./DarkLightSwitcher.module.css";
+import Light from "@/components/Icons/Light";
+import Dark from "@/components/Icons/Dark";
 
 function DarkLightSwitcher() {
   const [isDark, setIsDark] = useState(false);
@@ -45,7 +47,8 @@ function DarkLightSwitcher() {
   }, []);
 
   return (
-    <div className="h-[3rem] flex justify-center items-center rounded-md bg-light-2 dark:bg-dark-2">
+    <div className="h-[3rem] flex justify-center items-center rounded-md space-x-[1.5rem] bg-light-2 dark:bg-dark-2">
+      <Light className="h-[1.25rem]" />
       <label className="relative inline-flex items-center cursor-pointer">
         <input
           type="checkbox"
@@ -57,6 +60,7 @@ function DarkLightSwitcher() {
           <div className={styles.circle} />
         </div>
       </label>
+      <Dark className="h-[1.25rem]" />
     </div>
   );
 }

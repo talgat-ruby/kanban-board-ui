@@ -2,49 +2,42 @@
 
 import { useState } from "react";
 import clsx from "clsx";
+import { useParams } from "next/navigation";
 import { IBoard } from "@/types/boards";
 import LogoContainer from "@/components/LogoContainer";
 import DarkLightSwitcher from "@/components/DarkLightSwitcher";
+import BoardsList from "@/components/BoardsList";
+import ButtonHideSidebar from "@/components/ButtonHideSidebar";
+import ButtonShowSidebar from "@/components/ButtonShowSidebar";
 
 interface IProps {
   boards: IBoard[];
 }
 
 function Aside({ boards }: IProps) {
+  const params = useParams();
   const [isShowing, setIsShowing] = useState(true);
 
   return (
     <>
       <aside
         className={clsx(
-          "sticky top-0 z-10 w-[--sidebar-width] h-screen flex flex-col transition-[margin] bg-light-1 dark:bg-dark-3",
+          "sticky top-0 z-20 w-[--sidebar-width] h-screen h-max-screen flex flex-col overflow-hidden transition-[margin] bg-light-1 dark:bg-dark-3",
           !isShowing && "-ml-[--sidebar-width]"
         )}
       >
-        <LogoContainer className="h-[--header-height]" />
-        <div className="pt-[1rem]">
-          <span className="text-xs font-bold tracking-[.15em] text-light-4">
-            ALL BOARDS (3)
-          </span>
+        <LogoContainer className="flex-[0_0_var(--header-height)]" />
+        <div className="pt-[1rem] pb-[.5rem] flex-auto flex flex-col overflow-hidden">
+          <BoardsList activeBoardId={params.boardId} boards={boards} />
         </div>
-        <DarkLightSwitcher />
-        <button className="" onClick={() => setIsShowing(false)}>
-          Hide Sidebar
-        </button>
+        <div className="mb-[.5rem] mx-[1.5rem]">
+          <DarkLightSwitcher />
+        </div>
+        <ButtonHideSidebar onClick={setIsShowing} />
       </aside>
-      <button
-        className="fixed bottom-[2rem]"
-        onClick={() => setIsShowing(true)}
-      >
-        Show Sidebar
-      </button>
+      <ButtonShowSidebar onClick={setIsShowing} />
     </>
   );
-
-  // const router = useRouter();
-  // const params = useParams();
-  // const [isShowing, setIsShowing] = useState(true);
-  // const [columns, setColumns] = useState<string[]>([]);
   //
   // const handleSubmit = useCallback(
   //   async (event: FormEvent<HTMLFormElement>) => {
