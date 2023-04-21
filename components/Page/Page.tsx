@@ -1,13 +1,15 @@
-import Header from "@/components/Header";
+import BoardData from "@/components/BoardData";
 import Sidebar from "@/components/Sidebar";
-import BoardViewer from "@/components/BoardViewer";
 
-function Page() {
+interface IProps {
+  boardId?: string;
+}
+
+function Page({ boardId }: IProps) {
   return (
     <div className="h-[78rem] flex">
-      <Header />
       <Sidebar />
-      <BoardViewer />
+      <BoardData boardId={boardId} />
     </div>
   );
 }

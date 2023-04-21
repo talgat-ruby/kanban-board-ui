@@ -1,5 +1,4 @@
-import Sidebar from "@/components/Sidebar";
-import BoardViewer from "@/components/BoardViewer";
+import Page from "@/components/Page";
 
 interface IProps {
   params: {
@@ -8,10 +7,5 @@ interface IProps {
 }
 
 export default function Board({ params }: IProps) {
-  return (
-    <div>
-      <Sidebar />
-      <BoardViewer id={params.boardId} />
-    </div>
-  );
+  return <Page boardId={params.boardId} />;
 }
