@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import LogoDark from "@/components/Icons/LogoDark";
+import Link from "next/link";
 
 interface IProps {
   className?: string;
@@ -7,9 +8,11 @@ interface IProps {
 
 function LogoContainer({ className }: IProps) {
   return (
-    <figure className={clsx("flex items-center", className)}>
-      <LogoDark className="ml-[2.125rem]" />
-    </figure>
+    <Link href="/" className={clsx("flex items-center", className)}>
+      <figure>
+        <LogoDark className="ml-[2.125rem]" />
+      </figure>
+    </Link>
   );
 }
 

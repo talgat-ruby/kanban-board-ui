@@ -13,7 +13,7 @@ async function Sidebar() {
 
     return <Aside boards={boards} />;
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return null;
   }
 }

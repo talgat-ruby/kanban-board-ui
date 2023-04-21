@@ -3,13 +3,15 @@ import clsx from "clsx";
 import { IBoard } from "@/types/boards";
 import Board from "@/components/Icons/Board";
 import ButtonCreateNewBoard from "@/components/ButtonCreateNewBoard";
+import { useParams } from "next/navigation";
 
 interface IProps {
-  activeBoardId?: string;
   boards: IBoard[];
 }
 
-function BoardsList({ activeBoardId, boards }: IProps) {
+function BoardsList({ boards }: IProps) {
+  const params = useParams();
+
   return (
     <div className="flex-auto flex flex-col overflow-hidden">
       <span className="pl-[2rem] text-xs font-bold tracking-[.15rem] text-light-4">
@@ -22,7 +24,7 @@ function BoardsList({ activeBoardId, boards }: IProps) {
               href={`/${id}`}
               className={clsx(
                 "h-[3rem] px-[2rem] flex items-center rounded-r-[6.25rem]",
-                id === activeBoardId
+                params.boardId === id
                   ? "bg-purple-1 text-light-1"
                   : "text-light-4 hover:text-purple-1 hover:bg-purple-1/10 dark:hover:bg-light-1"
               )}

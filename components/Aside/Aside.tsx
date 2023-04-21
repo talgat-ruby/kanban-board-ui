@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import clsx from "clsx";
-import { useParams } from "next/navigation";
 import { IBoard } from "@/types/boards";
 import LogoContainer from "@/components/LogoContainer";
 import DarkLightSwitcher from "@/components/DarkLightSwitcher";
@@ -15,7 +14,6 @@ interface IProps {
 }
 
 function Aside({ boards }: IProps) {
-  const params = useParams();
   const [isShowing, setIsShowing] = useState(true);
 
   return (
@@ -28,7 +26,7 @@ function Aside({ boards }: IProps) {
       >
         <LogoContainer className="flex-[0_0_var(--header-height)]" />
         <div className="pt-[1rem] pb-[.5rem] flex-auto flex flex-col overflow-hidden">
-          <BoardsList activeBoardId={params.boardId} boards={boards} />
+          <BoardsList boards={boards} />
         </div>
         <div className="mb-[.5rem] mx-[1.5rem]">
           <DarkLightSwitcher />

@@ -37,7 +37,9 @@ function DarkLightSwitcher() {
         { signal }
       );
 
-      return controller.abort;
+      return () => {
+        controller?.abort();
+      };
     } catch (err) {}
   }, []);
 
