@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
-import "flowbite";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 

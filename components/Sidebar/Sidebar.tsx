@@ -12,8 +12,8 @@ async function Sidebar() {
     const boards: IBoard[] = await res.json();
 
     return <Aside boards={boards} />;
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error(err);
     return null;
   }
 }

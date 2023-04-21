@@ -6,9 +6,15 @@ import Light from "@/components/Icons/Light";
 import Dark from "@/components/Icons/Dark";
 
 function DarkLightSwitcher() {
-  const [isDark, setIsDark] = useState(
-    globalThis?.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false
-  );
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    try {
+      setIsDark(
+        window?.matchMedia("(prefers-color-scheme: dark)")?.matches ?? false
+      );
+    } catch (err) {}
+  }, []);
 
   useEffect(() => {
     if (isDark) {
@@ -23,7 +29,7 @@ function DarkLightSwitcher() {
       const controller = new AbortController();
       const signal = controller.signal;
 
-      globalThis?.matchMedia("(prefers-color-scheme: dark)")?.addEventListener(
+      window?.matchMedia("(prefers-color-scheme: dark)")?.addEventListener(
         "change",
         ({ matches: isDark }) => {
           setIsDark(isDark);
