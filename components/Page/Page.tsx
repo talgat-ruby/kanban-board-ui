@@ -7,7 +7,7 @@ interface IProps {
 
 function Page({ boardId }: IProps) {
   return (
-    <div className="h-[78rem] flex">
+    <div className="flex">
       <Sidebar />
       <BoardData boardId={boardId} />
     </div>
