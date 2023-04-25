@@ -1,12 +1,12 @@
 import Link from "next/link";
 import clsx from "clsx";
-import { IBoard } from "@/types/boards";
+import { TFetchBoardsResult } from "@/app/api/types";
 import Board from "@/components/Icons/Board";
-import ButtonCreateNewBoard from "@/components/ButtonCreateNewBoard";
 import { useParams } from "next/navigation";
+import ModalAddNewBoard from "@/components/ModalAddNewBoard";
 
 interface IProps {
-  boards: IBoard[];
+  boards: TFetchBoardsResult;
 }
 
 function BoardsList({ boards }: IProps) {
@@ -39,7 +39,7 @@ function BoardsList({ boards }: IProps) {
           </li>
         ))}
       </ul>
-      <ButtonCreateNewBoard onClick={() => null} />
+      <ModalAddNewBoard />
     </div>
   );
 }

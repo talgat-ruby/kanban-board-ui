@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import BoardViewer from "@/components/BoardViewer";
-import { IBoardWithColumnsWithTasksWithSubtasksAggr } from "@/types/boards";
+import { TFetchBoardResult } from "@/app/api/types";
 
 interface IProps {
   boardId?: string;
@@ -25,11 +25,12 @@ async function BoardData({ boardId }: IProps) {
       await Promise.reject(res.statusText);
     }
 
-    const board: IBoardWithColumnsWithTasksWithSubtasksAggr = await res.json();
+    const board: TFetchBoardResult = await res.json();
 
     return (
       <>
-        <Header boardId={boardId} boardName={board.name} />
+        <Header board={board} />
+        {/* @ts-ignore */}
         <BoardViewer board={board} />
       </>
     );

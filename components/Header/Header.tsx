@@ -1,16 +1,16 @@
 import LogoContainer from "@/components/LogoContainer";
 import HeaderInfo from "@/components/HeaderInfo";
+import { TFetchBoardResult } from "@/app/api/types";
 
 interface IProps {
-  boardId?: string;
-  boardName?: string;
+  board?: TFetchBoardResult;
 }
 
-function Header({ boardId, boardName = "" }: IProps) {
+function Header({ board }: IProps) {
   return (
     <header className="fixed w-full h-[--header-height] flex bg-light-1 dark:bg-dark-3">
       <LogoContainer className="w-[--sidebar-width] box-content border-r border-light-2 dark:border-dark-2" />
-      {boardId && <HeaderInfo boardId={boardId} boardName={boardName} />}
+      {board?.id && <HeaderInfo board={board} />}
     </header>
   );
 }

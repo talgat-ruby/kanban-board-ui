@@ -8,7 +8,9 @@ interface IProps {
 function Page({ boardId }: IProps) {
   return (
     <div className="flex">
+      {/* @ts-ignore */}
       <Sidebar />
+      {/* @ts-ignore */}
       <BoardData boardId={boardId} />
     </div>
   );

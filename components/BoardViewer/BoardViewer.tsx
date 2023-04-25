@@ -1,16 +1,14 @@
-import { IBoardWithColumnsWithTasksWithSubtasksAggr } from "@/types/boards";
-import styles from "./BoardViewer.module.css";
 import clsx from "clsx";
-
-styles;
+import { TFetchBoardResult } from "@/app/api/types";
+import styles from "./BoardViewer.module.css";
 
 interface IProps {
-  board: IBoardWithColumnsWithTasksWithSubtasksAggr;
+  board: TFetchBoardResult;
 }
 
 async function BoardViewer({ board }: IProps) {
   return (
-    <main className="flex-auto pt-[--header-height] max-h-screen flex flex-col bg-light-2 overflow-auto">
+    <main className="flex-auto max-h-screen pt-[--header-height] flex flex-col bg-light-2 overflow-auto">
       <div className="px-[1.5rem] pt-[1.5rem] pb-[3.125rem] flex">
         <ul className="flex-auto flex">
           {board.columns.map((column) => (
@@ -30,8 +28,8 @@ async function BoardViewer({ board }: IProps) {
                   >
                     <h4>{task.title}</h4>
                     <p>
-                      {task?.done_subtasks?.aggregate?.count} of{" "}
-                      {task?.all_subtasks.aggregate?.count}
+                      {task?.doneSubtasks?.aggregate?.count} of{" "}
+                      {task?.allSubtasks?.aggregate?.count}
                     </p>
                   </li>
                 ))}

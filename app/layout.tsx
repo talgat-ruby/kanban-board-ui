@@ -1,11 +1,19 @@
 import { ReactNode } from "react";
 import clsx from "clsx";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Amatic_SC, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 // If loading a variable font, you don't need to specify the font weight
 const plusJakartaSans = Plus_Jakarta_Sans({
-  weight: ["500", "700"],
+  weight: ["400", "500", "700"],
+  style: "normal",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// If loading a variable font, you don't need to specify the font weight
+const amaticSC = Amatic_SC({
+  weight: ["400", "700"],
   style: "normal",
   subsets: ["latin"],
   display: "swap",

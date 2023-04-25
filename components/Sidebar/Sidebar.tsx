@@ -1,4 +1,4 @@
-import { IBoard } from "@/types/boards";
+import { TFetchBoardsResult } from "@/app/api/types";
 import Aside from "@/components/Aside";
 
 async function Sidebar() {
@@ -9,7 +9,7 @@ async function Sidebar() {
       await Promise.reject(res.statusText);
     }
 
-    const boards: IBoard[] = await res.json();
+    const boards: TFetchBoardsResult = await res.json();
 
     return <Aside boards={boards} />;
   } catch (err) {
