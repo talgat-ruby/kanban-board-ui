@@ -9,3 +9,14 @@ export type {
   TResult as TUpdateBoardResult,
   IBody as IUpdateBoardBody,
 } from "./boards/[id]/updateBoard";
+
+export type {
+  TResult as TAddTaskResult,
+  IBody as IAddTaskBody,
+} from "./tasks/addTask";
+export type { TResult as TDeleteTaskResult } from "./tasks/[id]/deleteTask";
+export type { TResult as TFetchTaskResult } from "./tasks/[id]/fetchTask";
+export type {
+  TResult as TUpdateTaskResult,
+  IBody as IUpdateTaskBody,
+} from "./tasks/[id]/updateTask";

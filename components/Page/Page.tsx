@@ -8,7 +8,7 @@ interface IProps {
 function Page({ boardId }: IProps) {
   return (
     <div className="flex">
-      {/* @ts-ignore */}
+      {/* @ts-expect-error Async Server Component */}
       <Sidebar />
       {/* @ts-ignore */}
       <BoardData boardId={boardId} />

@@ -19,6 +19,19 @@ type TUpdateMutationVariables = {
   columns: IColumnVariables[];
 };
 
+interface IUpdateMutationResult {
+  delete_columns: {
+    affected_rows: number;
+  };
+  insert_columns: {
+    affected_rows: number;
+  };
+  update: {
+    id: string;
+    name: string;
+  };
+}
+
 const UpdateBoardMutation = gql`
   mutation UpdateBoard(
     $id: uuid!
@@ -84,11 +97,13 @@ async function updateBoard(id: string, body: IBody) {
   };
 
   const data = await client.request<
-    { update: TResult },
+    IUpdateMutationResult,
     TUpdateMutationVariables
   >(UpdateBoardMutation, variables);
 
-  return data.update;
+  const result: TResult = data.update;
+
+  return result;
 }
 
 export default updateBoard;

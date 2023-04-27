@@ -1,6 +1,6 @@
-import Ellipsis from "@/components/Icons/Ellipsis";
 import ModalUpdateBoard from "@/components/ModalUpdateBoard";
 import { TFetchBoardResult } from "@/app/api/types";
+import ModalDeleteBoard from "@/components/ModalDeleteBoard";
 
 interface IProps {
   board: TFetchBoardResult;
@@ -22,14 +22,19 @@ function HeaderInfo({ board }: IProps) {
           + Add New Task
         </button>
         <ModalUpdateBoard board={board} />
-        <button
-          id="dropdownMenuIconButton"
-          data-dropdown-toggle="dropdownDots"
-          className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-          type="button"
-        >
-          <Ellipsis />
-        </button>
+        <ModalDeleteBoard board={board} />
+        {/*<button*/}
+        {/*  id="dropdownMenuIconButton"*/}
+        {/*  data-dropdown-toggle="dropdownDots"*/}
+        {/*  className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"*/}
+        {/*  type="button"*/}
+        {/*>*/}
+        {/*  <Ellipsis />*/}
+        {/*</button>*/}
+
+        {/*<Dropdown name="board-actions" options={["Edit Board", "Delete Board"]}>*/}
+        {/*  <Ellipsis />*/}
+        {/*</Dropdown>*/}
       </div>
     </section>
   );

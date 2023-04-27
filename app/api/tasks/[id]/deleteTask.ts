@@ -8,35 +8,35 @@ type TDeleteMutationVariables = {
 interface IDeleteMutationResult {
   delete: {
     id: string;
-    name: string;
+    title: string;
   };
 }
 
-const DeleteBoardMutation = gql`
-  mutation DeleteBoard($id: uuid!) {
-    delete: delete_boards_by_pk(id: $id) {
+const DeleteTaskMutation = gql`
+  mutation DeleteTask($id: uuid!) {
+    delete: delete_tasks_by_pk(id: $id) {
       id
-      name
+      title
     }
   }
 `;
 
 export type TResult = {
   id: string;
-  name: string;
+  title: string;
 };
 
-async function deleteBoard(id: string) {
+async function deleteTask(id: string) {
   const variables: TDeleteMutationVariables = { id };
 
   const data = await client.request<
     IDeleteMutationResult,
     TDeleteMutationVariables
-  >(DeleteBoardMutation, variables);
+  >(DeleteTaskMutation, variables);
 
   const result: TResult = data.delete;
 
   return result;
 }
 
-export default deleteBoard;
+export default deleteTask;

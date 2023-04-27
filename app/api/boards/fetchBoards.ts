@@ -1,6 +1,15 @@
 import { gql } from "graphql-request";
 import client from "@/app/api/client";
 
+interface IBoard {
+  id: string;
+  name: string;
+}
+
+interface IListQueryResult {
+  list: IBoard[];
+}
+
 const GetBoardsQuery = gql`
   query GetBoards {
     list: boards {
@@ -10,17 +19,14 @@ const GetBoardsQuery = gql`
   }
 `;
 
-interface IBoard {
-  id: string;
-  name: string;
-}
-
 export type TResult = IBoard[];
 
 async function fetchBoards() {
-  const data = await client.request<{ list: TResult }>(GetBoardsQuery);
+  const data = await client.request<IListQueryResult>(GetBoardsQuery);
 
-  return data.list;
+  const result: TResult = data.list;
+
+  return result;
 }
 
 export default fetchBoards;

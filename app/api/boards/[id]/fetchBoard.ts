@@ -1,13 +1,41 @@
 import { gql } from "graphql-request";
 import client from "@/app/api/client";
 
-type TGetBoardVariables = {
+interface ISubtasksAggr {
+  aggregate: {
+    count: number;
+  };
+}
+
+interface ITasks {
+  id: string;
+  description: string;
+  title: string;
+  allSubtasks: ISubtasksAggr;
+  doneSubtasks: ISubtasksAggr;
+}
+
+interface IColumn {
+  id: string;
+  name: string;
+  tasks: ITasks[];
+}
+
+type TQueryItemVariables = {
   id: string;
 };
 
+interface IQueryItemResult {
+  item: {
+    id: string;
+    name: string;
+    columns: IColumn[];
+  };
+}
+
 const GetBoardQuery = gql`
   query GetBoard($id: uuid!) {
-    board: boards_by_pk(id: $id) {
+    item: boards_by_pk(id: $id) {
       id
       name
       columns(order_by: { position: asc }) {
@@ -35,26 +63,6 @@ const GetBoardQuery = gql`
   }
 `;
 
-interface ISubtasksAggr {
-  aggregate: {
-    count: number;
-  };
-}
-
-interface ITasks {
-  id: string;
-  description: string;
-  title: string;
-  allSubtasks: ISubtasksAggr;
-  doneSubtasks: ISubtasksAggr;
-}
-
-interface IColumn {
-  id: string;
-  name: string;
-  tasks: ITasks[];
-}
-
 export type TResult = {
   id: string;
   name: string;
@@ -62,14 +70,16 @@ export type TResult = {
 };
 
 async function fetchBoard(id: string) {
-  const variables: TGetBoardVariables = { id };
+  const variables: TQueryItemVariables = { id };
 
-  const data = await client.request<{ board: TResult }, TGetBoardVariables>(
+  const data = await client.request<IQueryItemResult, TQueryItemVariables>(
     GetBoardQuery,
     variables
   );
 
-  return data.board;
+  const result: TResult = data.item;
+
+  return result;
 }
 
 export default fetchBoard;

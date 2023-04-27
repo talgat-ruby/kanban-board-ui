@@ -6,13 +6,20 @@ interface IColumnVariables {
   position: number;
 }
 
-type TAddMutationVariables = {
+type TInsertMutationVariables = {
   name: string;
   columns: IColumnVariables[];
 };
 
-const AddBoardMutation = gql`
-  mutation AddBoard($name: String!, $columns: [columns_insert_input!]!) {
+interface IInsertMutationResult {
+  insert: {
+    id: string;
+    name: string;
+  };
+}
+
+const InsertBoardMutation = gql`
+  mutation InsertBoard($name: String!, $columns: [columns_insert_input!]!) {
     insert: insert_boards_one(
       object: { name: $name, columns: { data: $columns } }
     ) {
@@ -33,6 +40,7 @@ export interface IBody {
 
 export type TResult = {
   id: string;
+  name: string;
 };
 
 async function addBoard(body: IBody) {
@@ -41,17 +49,22 @@ async function addBoard(body: IBody) {
     position: i,
   }));
 
-  const variables: TAddMutationVariables = {
+  const variables: TInsertMutationVariables = {
     name: body.name,
     columns,
   };
 
-  const data = await client.request<{ insert: TResult }, TAddMutationVariables>(
-    AddBoardMutation,
-    variables
-  );
+  const data = await client.request<
+    IInsertMutationResult,
+    TInsertMutationVariables
+  >(InsertBoardMutation, variables);
 
-  return data.insert;
+  const result: TResult = {
+    id: data.insert.id,
+    name: data.insert.name,
+  };
+
+  return result;
 }
 
 export default addBoard;
