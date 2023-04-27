@@ -7,10 +7,16 @@ interface ISubtasksAggr {
   };
 }
 
+interface ISubtask {
+  id: string;
+  title: string;
+}
+
 interface ITasks {
   id: string;
   description: string;
   title: string;
+  subtasks: ISubtask[];
   allSubtasks: ISubtasksAggr;
   doneSubtasks: ISubtasksAggr;
 }
@@ -45,6 +51,10 @@ const GetBoardQuery = gql`
           id
           description
           title
+          subtasks {
+            id
+            title
+          }
           allSubtasks: subtasks_aggregate {
             aggregate {
               count

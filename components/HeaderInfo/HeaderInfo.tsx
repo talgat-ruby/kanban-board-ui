@@ -1,6 +1,7 @@
 import ModalUpdateBoard from "@/components/ModalUpdateBoard";
 import { TFetchBoardResult } from "@/app/api/types";
 import ModalDeleteBoard from "@/components/ModalDeleteBoard";
+import ModalAddNewTask from "@/components/ModalAddNewTask";
 
 interface IProps {
   board: TFetchBoardResult;
@@ -15,12 +16,7 @@ function HeaderInfo({ board }: IProps) {
         </h1>
       </div>
       <div className="flex items-center mr-[2rem] space-x-[1.5rem]">
-        <button
-          type="button"
-          className="w-[10.25rem] h-[3rem] flex items-center justify-center bg-purple-1 text-[.9375rem] font-bold text-light-1 rounded-[1.5rem]"
-        >
-          + Add New Task
-        </button>
+        <ModalAddNewTask columns={board.columns} />
         <ModalUpdateBoard board={board} />
         <ModalDeleteBoard board={board} />
         {/*<button*/}

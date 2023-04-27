@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import ModalUpdateTask from "@/components/ModalUpdateTask";
 import { TFetchBoardResult } from "@/app/api/types";
 import styles from "./BoardViewer.module.css";
 
@@ -31,6 +32,7 @@ async function BoardViewer({ board }: IProps) {
                       {task?.doneSubtasks?.aggregate?.count} of{" "}
                       {task?.allSubtasks?.aggregate?.count}
                     </p>
+                    <ModalUpdateTask task={task} columns={board.columns} />
                   </li>
                 ))}
               </ul>
