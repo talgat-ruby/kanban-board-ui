@@ -1,18 +1,18 @@
 import { gql } from "graphql-request";
 import client from "@/app/api/client";
 
-interface ISubtasksAggr {
+export interface ISubtasksAggr {
   aggregate: {
     count: number;
   };
 }
 
-interface ISubtask {
+export interface ISubtask {
   id: string;
   title: string;
 }
 
-interface ITasks {
+export interface ITasks {
   id: string;
   description: string;
   title: string;
@@ -21,11 +21,12 @@ interface ITasks {
   doneSubtasks: ISubtasksAggr;
 }
 
-interface IColumn {
+export interface IColumn {
   id: string;
   name: string;
   tasks: ITasks[];
 }
+
 
 type TQueryItemVariables = {
   id: string;
