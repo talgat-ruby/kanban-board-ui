@@ -1,4 +1,4 @@
-export type {
+  export type {
   TResult as TAddBoardResult,
   IBody as IAddBoardBody,
 } from "./boards/addBoard";
@@ -20,3 +20,24 @@ export type {
   TResult as TUpdateTaskResult,
   IBody as IUpdateTaskBody,
 } from "./tasks/[id]/updateTask";
+
+
+export type TColumn = {
+  id: string;
+  name: string;
+  tasks: TTask[];
+};
+
+export type TTask = {
+  id: string;
+  title: string;
+  description: string;
+  subtasks: TSubtask[];
+};
+
+export type TSubtask = {
+  id: string;
+  title: string;
+  isDone: boolean;
+};
+
