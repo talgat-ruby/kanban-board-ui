@@ -36,7 +36,7 @@ function ModalDeleteBoard({ board }: IProps) {
       const id = String(dataset.id);
 
       try {
-        const res = await fetch(`http://localhost:3000/api/boards/${id}`, {
+        const res = await fetch(`${process.env.HOST}/api/boards/${id}`, {
           method: "DELETE",
         });
 

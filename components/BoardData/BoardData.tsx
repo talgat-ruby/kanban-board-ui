@@ -19,7 +19,7 @@ async function BoardData({ boardId }: IProps) {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/api/boards/${boardId}`);
+    const res = await fetch(`${process.env.HOST}/api/boards/${boardId}`);
 
     if (!res.ok) {
       await Promise.reject(res.statusText);

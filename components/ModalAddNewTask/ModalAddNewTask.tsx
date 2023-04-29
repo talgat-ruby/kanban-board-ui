@@ -58,7 +58,7 @@ function ModalAddNewTask({ columns }: IProps) {
           columnId: String(formData.get("column")),
           subtasks,
         };
-        const res = await fetch("http://localhost:3000/api/tasks", {
+        const res = await fetch("/api/tasks", {
           method: "POST",
           body: JSON.stringify(body),
         });

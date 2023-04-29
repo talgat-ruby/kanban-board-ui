@@ -61,7 +61,7 @@ function ModalUpdateBoard({ board }: IProps) {
           name: String(formData.get("name")),
           columns: columns,
         };
-        const res = await fetch(`http://localhost:3000/api/boards/${id}`, {
+        const res = await fetch(`/api/boards/${id}`, {
           method: "PUT",
           body: JSON.stringify(body),
         });

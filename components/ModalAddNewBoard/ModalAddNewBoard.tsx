@@ -46,7 +46,7 @@ function ModalAddNewBoard() {
           name: String(formData.get("name")),
           columns,
         };
-        const res = await fetch("http://localhost:3000/api/boards", {
+        const res = await fetch("/api/boards", {
           method: "POST",
           body: JSON.stringify(body),
         });
