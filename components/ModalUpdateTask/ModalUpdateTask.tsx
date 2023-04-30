@@ -94,7 +94,7 @@ function ModalUpdateTask({ task, columns }: IProps) {
   );
 
   return (
-    <>
+    <div>
       <ButtonUpdateTask onClick={handleNewTaskClick} />
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <FormTask
@@ -105,7 +105,7 @@ function ModalUpdateTask({ task, columns }: IProps) {
           onSubmit={handleSubmit}
         />
       </Dialog>
-    </>
+    </div>
   );
 }
 

@@ -29,6 +29,7 @@ module.exports = {
           3: "hsl(var(--light-3) / <alpha-value>)",
           4: "hsl(var(--light-4) / <alpha-value>)",
         },
+        shadow: "hsl(var(--shadow) / <alpha-value>)",
       },
     },
   },

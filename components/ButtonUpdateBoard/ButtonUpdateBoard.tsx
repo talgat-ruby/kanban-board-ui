@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import clsx from "clsx";
 
 interface IProps {
   onClick: () => void;
@@ -10,15 +9,11 @@ function ButtonUpdateBoard({ onClick }: IProps) {
 
   return (
     <button
-      className={clsx(
-        "mr-[1.5rem] box-content h-[3rem] min-h-[3rem] px-[2rem] flex items-center",
-        "rounded-r-[6.25rem]",
-        "text-purple-1 hover:text-purple-2 focus:text-purple-2"
-      )}
+      className="flex-auto flex items-center px-[1rem] bg-light-1 hover:bg-purple-1/10 dark:bg-dark-2 dark:hover:bg-light-2"
       onClick={handleClick}
     >
-      <span className="inline-block ml-[1rem] font-[.9375rem] font-bold leading-[1.1875rem] text-inherit">
-        Update New Board
+      <span className="text-light-4 text-[0.8125rem] font-medium leading-[1.4375rem]">
+        Edit Board
       </span>
     </button>
   );

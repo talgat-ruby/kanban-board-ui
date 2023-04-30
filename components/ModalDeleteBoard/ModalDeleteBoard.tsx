@@ -1,9 +1,8 @@
 "use client";
 
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Dialog from "@/components/Dialog";
-import ButtonDeleteBoard from "@/components/ButtonDeleteBoard";
 import FormConfirmation from "@/components/FormConfirmation";
 import { TDeleteBoardResult, TFetchBoardResult } from "@/app/api/types";
 
@@ -14,19 +13,12 @@ interface IColumn {
 
 interface IProps {
   board: TFetchBoardResult;
+  open: boolean;
+  onClose: () => void;
 }
 
-function ModalDeleteBoard({ board }: IProps) {
+function ModalDeleteBoard({ board, open, onClose }: IProps) {
   const router = useRouter();
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const handleNewBoardClick = useCallback(() => {
-    setOpenDialog(true);
-  }, []);
-
-  const handleDialogClose = useCallback(() => {
-    setOpenDialog(false);
-  }, []);
 
   const handleSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -55,18 +47,15 @@ function ModalDeleteBoard({ board }: IProps) {
   );
 
   return (
-    <>
-      <ButtonDeleteBoard onClick={handleNewBoardClick} />
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <FormConfirmation
-          id={board.id}
-          title="Delete this board?"
-          description="Are you sure you want to delete the ‘Platform Launch’ board? This action will remove all columns and tasks and cannot be reversed."
-          onSubmit={handleSubmit}
-          onCancel={handleDialogClose}
-        />
-      </Dialog>
-    </>
+    <Dialog open={open} onClose={onClose}>
+      <FormConfirmation
+        id={board.id}
+        title="Delete this board?"
+        description="Are you sure you want to delete the ‘Platform Launch’ board? This action will remove all columns and tasks and cannot be reversed."
+        onSubmit={handleSubmit}
+        onCancel={onClose}
+      />
+    </Dialog>
   );
 }
 

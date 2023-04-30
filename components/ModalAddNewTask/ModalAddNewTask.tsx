@@ -78,7 +78,7 @@ function ModalAddNewTask({ columns }: IProps) {
   );
 
   return (
-    <>
+    <div>
       <ButtonCreateNewTask onClick={handleNewBoardClick} />
       <Dialog open={openDialog} onClose={handleDialogClose}>
         <FormTask
@@ -89,7 +89,7 @@ function ModalAddNewTask({ columns }: IProps) {
           onSubmit={handleSubmit}
         />
       </Dialog>
-    </>
+    </div>
   );
 }
 

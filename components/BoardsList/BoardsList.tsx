@@ -15,7 +15,7 @@ function BoardsList({ boards }: IProps) {
   return (
     <div className="flex-auto flex flex-col overflow-hidden">
       <span className="pl-[2rem] text-xs font-bold tracking-[.15rem] text-light-4">
-        ALL BOARDS (3)
+        ALL BOARDS ({boards.length})
       </span>
       <ul className="mt-[1.125rem] flex-initial overflow-y-auto">
         {boards.map(({ id, name }) => (

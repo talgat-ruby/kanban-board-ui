@@ -17,7 +17,7 @@ function ButtonCreateNewTask({ onClick }: IProps) {
       )}
       onClick={handleClick}
     >
-      <span className="inline-block ml-[1rem] font-[.9375rem] font-bold leading-[1.1875rem] text-inherit">
+      <span className="inline-block font-[.9375rem] font-bold leading-[1.1875rem] text-inherit">
         + Add New Task
       </span>
     </button>

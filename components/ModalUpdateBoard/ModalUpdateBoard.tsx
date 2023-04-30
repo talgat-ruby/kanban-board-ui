@@ -1,8 +1,7 @@
 "use client";
 
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import ButtonUpdateBoard from "@/components/ButtonUpdateBoard";
 import FormBoard from "@/components/FormBoard";
 import Dialog from "@/components/Dialog";
 import {
@@ -18,19 +17,12 @@ interface IColumn {
 
 interface IProps {
   board: TFetchBoardResult;
+  open: boolean;
+  onClose: () => void;
 }
 
-function ModalUpdateBoard({ board }: IProps) {
+function ModalUpdateBoard({ board, open, onClose }: IProps) {
   const router = useRouter();
-  const [openDialog, setOpenDialog] = useState(false);
-
-  const handleNewBoardClick = useCallback(() => {
-    setOpenDialog(true);
-  }, []);
-
-  const handleDialogClose = useCallback(() => {
-    setOpenDialog(false);
-  }, []);
 
   const handleSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -81,17 +73,14 @@ function ModalUpdateBoard({ board }: IProps) {
   );
 
   return (
-    <>
-      <ButtonUpdateBoard onClick={handleNewBoardClick} />
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <FormBoard
-          board={board}
-          title="Edit Board"
-          submitButton="Save Changes"
-          onSubmit={handleSubmit}
-        />
-      </Dialog>
-    </>
+    <Dialog open={open} onClose={onClose}>
+      <FormBoard
+        board={board}
+        title="Edit Board"
+        submitButton="Save Changes"
+        onSubmit={handleSubmit}
+      />
+    </Dialog>
   );
 }
 
